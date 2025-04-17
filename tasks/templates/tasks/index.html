@@ -1,33 +1,34 @@
 {% extends 'tasks/base.html' %}
-
 {% block content %}
+<h2>Todas las Tareas</h2>
 
-    {% if tasks %}
-        <ul class="list-group">
-            {% for task in tasks %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <form action="{% url 'toggle_task' task.id %}" method="post" class="me-2">
-                            {% csrf_token %}
-                            <input type="checkbox" class="form-check-input" onchange="this.form.submit()" {% if task.completed %}checked{% endif %}>
-                        </form>
-                        <div>
-                            <strong {% if task.completed %}class="text-decoration-line-through text-muted"{% endif %}>
-                                {{ task.description }}
-                            </strong><br>
-                            <small>Prioridad: {{ task.get_priority_display }}</small>
-                        </div>
-                    </div>
-                    <div>
-                        <form action="{% url 'delete_task' task.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button class="btn btn-sm btn-danger">Eliminar</button>
-                        </form>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="text-center text-muted">No hay tareas aún.</p>
-    {% endif %}
+<form method="get" class="mb-3">
+    <input type="text" name="q" placeholder="Buscar por descripción" class="form-control" value="{{ query }}">
+</form>
+
+{% if tasks %}
+    <ul class="list-group">
+        {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ task.description }}</strong><br>
+                    {% if task.deadline %}
+                        <small class="text-muted">Vence: {{ task.deadline|date:"d M Y H:i" }}</small>
+                    {% else %}
+                        <small class="text-muted">Sin fecha límite</small>
+                    {% endif %}
+                </div>
+                <div>
+                    <a href="{% url 'toggle_task' task.id %}" class="btn btn-sm btn-outline-success me-2">
+                        {% if task.completed %}<i class="bi bi-arrow-counterclockwise"></i>{% else %}<i class="bi bi-check-circle"></i>{% endif %}
+                    </a>
+                    <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-pencil-square"></i></a>
+                    <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-muted text-center">No hay tareas registradas.</p>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'tasks/base.html' %}
+{% block content %}
+<h2>Editar Tarea</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <input type="text" class="form-control" name="description" value="{{ task.description }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Prioridad</label>
+        <select class="form-control" name="priority">
+            <option value="Alta" {% if task.priority == 'Alta' %}selected{% endif %}>Alta</option>
+            <option value="Media" {% if task.priority == 'Media' %}selected{% endif %}>Media</option>
+            <option value="Baja" {% if task.priority == 'Baja' %}selected{% endif %}>Baja</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha límite</label>
+        <input type="datetime-local" class="form-control" name="deadline" value="{{ task.deadline|date:'Y-m-d\\TH:i' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+</form>
+{% endblock %}

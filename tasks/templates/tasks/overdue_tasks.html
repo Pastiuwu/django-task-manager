@@ -1,0 +1,31 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-exclamation-circle text-danger"></i> Tareas Vencidas</h2>
+
+{% if tasks %}
+    <ul class="list-group">
+        {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ task.description }}</strong><br>
+                    <small class="text-danger">Vencida: {{ task.deadline|date:"d M Y H:i" }}</small>
+                </div>
+                <div>
+                    <a href="{% url 'toggle_task' task.id %}" class="btn btn-outline-success btn-sm me-2">
+                        <i class="bi bi-check-circle"></i>
+                    </a>
+                    <a href="{% url 'edit_task' task.id %}" class="btn btn-outline-primary btn-sm me-2">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <a href="{% url 'delete_task' task.id %}" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-muted text-center">No hay tareas vencidas.</p>
+{% endif %}
+{% endblock %}
